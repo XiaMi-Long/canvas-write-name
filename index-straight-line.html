@@ -2,7 +2,7 @@
  * @Author: weiwenyu 2454150875@qq.com
  * @Date: 2023-03-30 14:20:23
  * @LastEditors: weiwenyu 2454150875@qq.com
- * @LastEditTime: 2023-03-31 15:53:07
+ * @LastEditTime: 2023-03-31 15:14:02
  * @FilePath: \canvas写字板\index.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -48,12 +48,11 @@
         const content = myCanvas.getContext('2d')
 
         let scale = 1
+        let isListenerMoveEvent = false
         let clickOffsetX = 0
         let clickOffsetY = 0
         let canvasHeight = 0
         let canvasWidth = 0
-        let isListenerMoveEvent = false
-        let isFirstClick = 0
 
         // content.beginPath(); // Start a new path
         // content.moveTo(300, 20); // Move the pen to (30, 50)
@@ -92,10 +91,6 @@
 
         // 添加鼠标按下事件
         myCanvas.addEventListener('mousedown', function (e) {
-            content.beginPath()
-            if (isFirstClick === 0) {
-                isFirstClick++
-            }
             const mousePos = getMousePos(myCanvas, e)
             clickOffsetX = mousePos.x
             clickOffsetY = mousePos.y
@@ -105,30 +100,30 @@
         // 添加鼠标在布上移动事件
         myCanvas.addEventListener('mousemove', function (e) {
             if (isListenerMoveEvent) {
-                draw(e)
+                const { offsetX, offsetY } = e
             }
         })
 
         // 添加鼠标松开事件
         myCanvas.addEventListener('mouseup', function (e) {
             isListenerMoveEvent = false
-            content.closePath()
+            const { offsetX, offsetY } = e
+            drawLine(e)
         })
 
         // 画
-        function draw (event) {
+        function drawLine (event) {
             console.log(clickOffsetX, clickOffsetY);
             const mousePos = getMousePos(myCanvas, event)
             console.log(mousePos);
 
             content.lineWidth = 1
-
-            if (isFirstClick === 1) {
-                isFirstClick = 0
-                content.moveTo(clickOffsetX, clickOffsetY)
-            }
+            content.beginPath()
+            content.moveTo(0, 0)
+            content.moveTo(clickOffsetX, clickOffsetY)
             content.lineTo(mousePos.x, mousePos.y)
-            content.moveTo(mousePos.x, mousePos.y)
+            content.closePath()
+
             content.stroke()
         }
     </script>
