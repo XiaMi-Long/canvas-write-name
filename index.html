@@ -1,0 +1,132 @@
+<!--
+ * @Author: weiwenyu 2454150875@qq.com
+ * @Date: 2023-03-30 14:20:23
+ * @LastEditors: weiwenyu 2454150875@qq.com
+ * @LastEditTime: 2023-03-31 15:14:02
+ * @FilePath: \canvas写字板\index.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+
+    <style>
+        body {
+            background-color: black;
+        }
+
+        .container {
+            height: 800px;
+
+            display: flex;
+            justify-content: center;
+
+            border: 1px solid white;
+        }
+
+        #myCanvas {
+
+            background-color: beige;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="container">
+        <canvas id="myCanvas" width="1000" height="800"></canvas>
+    </div>
+
+
+    <script>
+        const myCanvas = document.getElementById("myCanvas");
+        const content = myCanvas.getContext('2d')
+
+        let scale = 1
+        let isListenerMoveEvent = false
+        let clickOffsetX = 0
+        let clickOffsetY = 0
+        let canvasHeight = 0
+        let canvasWidth = 0
+
+        // content.beginPath(); // Start a new path
+        // content.moveTo(300, 20); // Move the pen to (30, 50)
+        // content.lineTo(200 / 1.25, 647); // Draw a line to (150, 100)
+        // content.stroke(); // Render the path
+
+        init()
+
+        function init () {
+            // 获取像素大小的比率
+            function getDevicePixelRatio () {
+                const scale = window.devicePixelRatio
+                scale = scale
+            }
+
+            function setCanvasWidth (canvasEl) {
+                canvasHeight = canvasEl.height;
+                canvasWidth = canvasEl.width;
+                canvasEl.style.width = canvasEl.width + 'px';
+                canvasEl.style.height = canvasEl.height + 'px';
+
+                canvasEl.width = canvasEl.width * scale;
+                canvasEl.height = canvasEl.height * scale;
+            }
+
+            setCanvasWidth(myCanvas)
+        }
+
+        // 获取鼠标位置
+        function getMousePos (canvas, event) {
+            return {
+                x: parseInt(event.offsetX * scale, 10),
+                y: parseInt(event.offsetY * scale, 10)
+            };
+        }
+
+        // 添加鼠标按下事件
+        myCanvas.addEventListener('mousedown', function (e) {
+            const mousePos = getMousePos(myCanvas, e)
+            clickOffsetX = mousePos.x
+            clickOffsetY = mousePos.y
+            isListenerMoveEvent = true
+        })
+
+        // 添加鼠标在布上移动事件
+        myCanvas.addEventListener('mousemove', function (e) {
+            if (isListenerMoveEvent) {
+                const { offsetX, offsetY } = e
+            }
+        })
+
+        // 添加鼠标松开事件
+        myCanvas.addEventListener('mouseup', function (e) {
+            isListenerMoveEvent = false
+            const { offsetX, offsetY } = e
+            drawLine(e)
+        })
+
+        // 画
+        function drawLine (event) {
+            console.log(clickOffsetX, clickOffsetY);
+            const mousePos = getMousePos(myCanvas, event)
+            console.log(mousePos);
+
+            content.lineWidth = 1
+            content.beginPath()
+            content.moveTo(0, 0)
+            content.moveTo(clickOffsetX, clickOffsetY)
+            content.lineTo(mousePos.x, mousePos.y)
+            content.closePath()
+
+            content.stroke()
+        }
+    </script>
+</body>
+
+</html>
